@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import SendIcon from 'react-native-vector-icons/Ionicons';
 import {ChatMessageComponent} from '../../components';
-import {useRegister} from '../../../App';
+import {useAppState} from '../../hook/AppState';
 import {useQuery, useSubscription, useMutation} from '@apollo/client';
 import {
   GET_ALL_CHAT_MESSAGES,
@@ -22,7 +22,7 @@ import {
 type Props = NativeStackScreenProps<RootStackPramsList, 'Chat'>;
 
 const Chat: React.FC<Props> = ({route}) => {
-  const {setChatRoomName, username, imageUrl} = useRegister();
+  const {setChatRoomName, username, imageUrl} = useAppState();
   const [inputValue, setInputValue] = useState('');
   const [numberOfLines, setNumberOfLines] = useState(1);
   const [chatMessages, setChatMessages] = useState<any[]>([]);
@@ -95,7 +95,7 @@ const Chat: React.FC<Props> = ({route}) => {
             }
           }}
           value={inputValue}
-          multiline
+          multiline={true}
           numberOfLines={numberOfLines < 6 ? numberOfLines : 6}
         />
         <TouchableHighlight style={style.Touchable} onPress={handleSubmit}>

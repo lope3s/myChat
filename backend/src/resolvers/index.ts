@@ -43,9 +43,7 @@ const resolvers = {
             const allChatRooms =
                 await dataSources.chatRoomController.getAllRooms();
 
-            pubSub.publish("CHAT_ROOM_CREATED", { allChatRooms });
-
-            return "";
+            return allChatRooms;
         },
         getAllChatMessages: async (
             _: any,

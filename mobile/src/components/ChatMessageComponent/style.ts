@@ -9,7 +9,8 @@ export const Message = styled.View<IMessage>`
   flex-direction: row;
   justify-content: ${props => (props.isMyMessage ? 'flex-end' : 'flex-start')};
   margin: 10px 0;
-  padding: 0 30px;
+  padding: 0 10px;
+  align-items: center;
 `;
 
 export const TextBox = styled.View`
@@ -28,6 +29,14 @@ export const Author = styled.Text<IMessage>`
   color: ${props => (props.isMyMessage ? '#E9C46A' : '#E76F51')};
   font-size: 14px;
   font-weight: 600;
-  align-self: flex-end;
-  margin-right: 8px;
+  align-self: flex-start;
+  margin-left: 8px;
+`;
+
+export const Image = styled.Image<IMessage>`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-right: ${props => (!props.isMyMessage ? '10px' : '0px')};
+  margin-left: ${props => (props.isMyMessage ? '10px' : '0px')};
 `;

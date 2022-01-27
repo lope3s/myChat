@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Container, Content, Input, Button, Text, ErrorMessage} from './style';
 import {useMutation} from '@apollo/client';
 import {REGISTER_CHAT_ROOM} from '../../gqlSchemas';
 import {TouchableHighlight, StyleSheet, Alert, Keyboard} from 'react-native';
-import {useRegister} from '../../../App';
+import {useAppState} from '../../hook/AppState';
 
 interface INewChatRoomModal {
   setNewChatRoomModalDisplay: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,19 +12,14 @@ interface INewChatRoomModal {
 const NewChatRoomModal: React.FC<INewChatRoomModal> = ({
   setNewChatRoomModalDisplay,
 }) => {
-  const {userId} = useRegister();
+  const {userId} = useAppState();
   const [inputValue, setInputValue] = useState('');
   const [inputError, setInputError] = useState('');
   const [registerChatRoom, {data, error, reset}] =
     useMutation(REGISTER_CHAT_ROOM);
 
-  if (data) {
-    setNewChatRoomModalDisplay(false);
-    reset();
-  }
-
   if (error) {
-    Alert.alert('Erro ao criar a sala', error.message);
+    Alert.alert('Error while creating chat room', error.message);
     reset();
   }
 
@@ -38,6 +33,13 @@ const NewChatRoomModal: React.FC<INewChatRoomModal> = ({
     setInputError('');
     registerChatRoom({variables: {userId, roomName: inputValue}});
   };
+
+  useEffect(() => {
+    if (data) {
+      setNewChatRoomModalDisplay(false);
+      reset();
+    }
+  }, [data]);
 
   return (
     <Container onPress={() => setNewChatRoomModalDisplay(false)}>
@@ -57,7 +59,7 @@ const NewChatRoomModal: React.FC<INewChatRoomModal> = ({
         {inputError ? <ErrorMessage>{inputError}</ErrorMessage> : null}
         <TouchableHighlight style={style.Touchable} onPress={handleSubmit}>
           <Button>
-            <Text>Criar Sala</Text>
+            <Text>Create room</Text>
           </Button>
         </TouchableHighlight>
       </Content>

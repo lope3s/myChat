@@ -26,7 +26,13 @@ export const CHECK_USER_DATA = gql`
 
 export const GET_CHAT_ROOMS = gql`
   query GetChatRoms {
-    getChatRooms
+    getChatRooms {
+      id
+      roomName
+      user {
+        id
+      }
+    }
   }
 `;
 

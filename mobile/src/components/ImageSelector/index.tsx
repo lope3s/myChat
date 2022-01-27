@@ -10,7 +10,7 @@ import {
 } from './style';
 import {Loading} from '..';
 import React, {useState} from 'react';
-import {useRegister} from '../../../App';
+import {useAppState} from '../../hook/AppState';
 import {useLazyQuery} from '@apollo/client';
 import {GET_CHARACTERS_IMAGES} from '../../gqlSchemas';
 import {Alert} from 'react-native';
@@ -26,14 +26,14 @@ interface ICharacter {
 const ImageSelector: React.FC = () => {
   const [maxPage, setMaxPage] = useState();
   const [pageCounter, setPageCounter] = useState(1);
-  const {modal, imageUrl, setImageUrl, setModal} = useRegister();
+  const {modal, imageUrl, setImageUrl, setModal} = useAppState();
   const [getCharactersImages, {data, loading, error}] = useLazyQuery(
     GET_CHARACTERS_IMAGES,
     {variables: {page: pageCounter}},
   );
 
   if (error) {
-    Alert.alert('Erro de requisição', error.message);
+    Alert.alert('Requisition error', error.message);
   }
 
   if (data && !maxPage) {

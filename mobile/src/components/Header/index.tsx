@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableHighlight, StyleSheet} from 'react-native';
 import {Container, Title, Image} from './style';
-import {useRegister} from '../../../App';
+import {useAppState} from '../../hook/AppState';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import ArrowIcon from 'react-native-vector-icons/AntDesign';
 
@@ -15,7 +15,7 @@ const Header: React.FC<Props> = ({route, navigation}) => {
     chatRoomModal,
     chatRoomName,
     setChatRoomName,
-  } = useRegister();
+  } = useAppState();
 
   return (
     <Container>

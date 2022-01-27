@@ -9,7 +9,7 @@ import {
   ButtonContentBox,
   ImageContainerButtonBox,
 } from './style';
-import {useRegister} from '../../../App';
+import {useAppState} from '../../hook/AppState';
 import {Loading} from '..';
 import {useQuery, useMutation} from '@apollo/client';
 import {GET_CHARACTERS_IMAGES, UPDATE_USER_IMAGE} from '../../gqlSchemas';
@@ -22,7 +22,7 @@ interface ICharacter {
 }
 
 const ChatRoomImageSelectBox: React.FC = () => {
-  const {setChatRoomModal, setImageUrl, username} = useRegister();
+  const {setChatRoomModal, setImageUrl, username} = useAppState();
   const [maxPage, setMaxPage] = useState();
   const [pageCounter, setPageCounter] = useState(1);
   const {data, loading, error, refetch} = useQuery(GET_CHARACTERS_IMAGES, {
@@ -31,12 +31,12 @@ const ChatRoomImageSelectBox: React.FC = () => {
   const [updateImage, updateImageResponse] = useMutation(UPDATE_USER_IMAGE);
 
   if (error) {
-    Alert.alert('Erro de requisição', error.message);
+    Alert.alert('Requisition error', error.message);
   }
 
   if (updateImageResponse.error) {
     Alert.alert(
-      'Erro ao atualizar a imagem: ',
+      'Error while updating image ',
       updateImageResponse.error.message,
     );
     updateImageResponse.reset();
@@ -52,7 +52,7 @@ const ChatRoomImageSelectBox: React.FC = () => {
 
   return (
     <Container
-      onPress={e => {
+      onPress={() => {
         setChatRoomModal(false);
       }}>
       <Content

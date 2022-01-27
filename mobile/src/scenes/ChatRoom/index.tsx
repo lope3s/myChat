@@ -14,8 +14,8 @@ import {
 } from '../../components';
 import {View, TouchableHighlight, StyleSheet, Alert} from 'react-native';
 import AddIcon from 'react-native-vector-icons/Ionicons';
-import {useRegister} from '../../../App';
-import {useSubscription, useLazyQuery} from '@apollo/client';
+import {useAppState} from '../../hook/AppState';
+import {useSubscription, useQuery} from '@apollo/client';
 import {WATCH_CHAT_ROOMS, GET_CHAT_ROOMS} from '../../gqlSchemas';
 
 type Props = NativeStackScreenProps<RootStackPramsList, 'ChatRoom'>;
@@ -29,13 +29,19 @@ interface IAllChatRooms {
 }
 
 const ChatRoom: React.FC<Props> = ({navigation}) => {
-  const {chatRoomModal, userId, setChatRoomName} = useRegister();
-  const {data, error} = useSubscription(WATCH_CHAT_ROOMS);
-  const [query] = useLazyQuery(GET_CHAT_ROOMS);
+  const {chatRoomModal, userId, setChatRoomName} = useAppState();
+  const [chatRooms, setChatRooms] = useState([]);
+  const {data, error} = useSubscription(WATCH_CHAT_ROOMS, {
+    onSubscriptionData: ({subscriptionData}) => {
+      console.log('aqui');
+      setChatRooms(subscriptionData.data.allChatRooms);
+    },
+  });
+  const queryState = useQuery(GET_CHAT_ROOMS);
   const [newChatRoomModalDisplay, setNewChatRoomModalDisplay] = useState(false);
 
   if (error) {
-    Alert.alert('Erro ao criar a sala', error.message);
+    Alert.alert('Error at creating a new chat room', error.message);
   }
 
   const sortArray = (array: IAllChatRooms[]) => {
@@ -49,8 +55,10 @@ const ChatRoom: React.FC<Props> = ({navigation}) => {
   };
 
   useEffect(() => {
-    query();
-  }, [query]);
+    if (queryState.data && !chatRooms.length && !data) {
+      setChatRooms(queryState.data.getChatRooms);
+    }
+  }, [queryState]);
 
   return (
     <Container>
@@ -62,7 +70,7 @@ const ChatRoom: React.FC<Props> = ({navigation}) => {
       ) : null}
       <TopicsContainer>
         <TopicsContentContainer
-          data={data?.allChatRooms?.length ? sortArray(data?.allChatRooms) : []}
+          data={sortArray(chatRooms)}
           renderItem={({item}) => (
             <ChatRoomTopicCard
               item={item}

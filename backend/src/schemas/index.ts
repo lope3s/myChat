@@ -70,7 +70,7 @@ const typeDefs = gql`
         start: String
         getPaginatedCharactersData(page: Int!): PaginatedRMApiResult
         checkUserData(id: String!): User
-        getChatRooms: String
+        getChatRooms: [CompleteChatRoom]
         getAllChatMessages(roomId: String!): [Message]
     }
 

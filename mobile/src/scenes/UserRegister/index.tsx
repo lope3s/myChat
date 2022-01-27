@@ -8,14 +8,15 @@ import {
   ErrorMessage,
   Loading,
 } from './style';
-import {Text, StyleSheet, View, Alert, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Alert, ActivityIndicator} from 'react-native';
 import {ImageSelector} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {RootStackPramsList, IUserRegister} from '../../../App';
-import {useRegister} from '../../../App';
+import type {RootStackPramsList} from '../../../App';
 import {useMutation, useLazyQuery} from '@apollo/client';
 import {REGISTER_USER, CHECK_USER_DATA} from '../../gqlSchemas';
+import {useAppState} from '../../hook/AppState';
+import {useAppNavigation} from '../../../App';
 
 type Props = NativeStackScreenProps<RootStackPramsList, 'Register'>;
 
@@ -29,46 +30,27 @@ interface IGetUserData {
 
 const UserRegister: React.FC<Props> = () => {
   const [formError, setError] = useState('');
-  const {
-    modal,
-    imageUrl,
-    setImageUrl,
-    setModal,
-    username,
-    setUsername,
-    setNavigate,
-    setUserId,
-  } = useRegister();
   const [register, {data, loading, error, reset}] = useMutation(REGISTER_USER);
   const [getUserData, checkUserData] =
     useLazyQuery<IGetUserData>(CHECK_USER_DATA);
 
-  if (checkUserData?.data?.checkUserData) {
-    setImageUrl(checkUserData.data.checkUserData?.imageUrl);
-    setUsername(checkUserData.data.checkUserData?.username);
-    setUserId(checkUserData.data.checkUserData?.id);
-    setNavigate(true);
-  }
+  const {setImageUrl, setUsername, setUserId, username, imageUrl, modal} =
+    useAppState();
 
-  if (data) {
-    AsyncStorage.setItem('userId', JSON.stringify(data.registerUser.id));
-    setUserId(data.registerUser.id);
-    reset();
-    setNavigate(true);
-  }
+  const {setNavigate} = useAppNavigation();
 
   if (error) {
-    Alert.alert('Erro no registro', error.message);
+    Alert.alert('Error in the registry', error.message);
     reset();
   }
 
   const triggerError = (value: string) => {
     if (!value) {
-      return setError('Digite um username');
+      return setError('Enter a username');
     }
 
     if (value.length <= 3) {
-      return setError('Username precisa ter 4 caracteres ou mais');
+      return setError('Username needs at least 4 characters');
     }
 
     return setError('');
@@ -78,7 +60,7 @@ const UserRegister: React.FC<Props> = () => {
     triggerError(username);
 
     if (!imageUrl) {
-      return setError('Selecione uma Imagem');
+      return setError('Select an image');
     }
 
     register({variables: {imageUrl, username}});
@@ -92,9 +74,25 @@ const UserRegister: React.FC<Props> = () => {
         }
       })
       .catch(err => {
-        Alert.alert('Erro Interno');
+        Alert.alert('Internal error');
       });
   }, [getUserData, checkUserData.called, checkUserData.refetch]);
+
+  useEffect(() => {
+    if (data) {
+      AsyncStorage.setItem('userId', JSON.stringify(data.registerUser.id));
+      setUserId(data.registerUser.id);
+      reset();
+      setNavigate(true);
+    }
+
+    if (checkUserData?.data?.checkUserData) {
+      setImageUrl(checkUserData.data.checkUserData?.imageUrl);
+      setUsername(checkUserData.data.checkUserData?.username);
+      setUserId(checkUserData.data.checkUserData?.id);
+      setNavigate(true);
+    }
+  }, [checkUserData?.data?.checkUserData, data]);
 
   return loading || checkUserData.loading ? (
     <Loading>

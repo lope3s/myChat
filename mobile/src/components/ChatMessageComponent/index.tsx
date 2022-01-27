@@ -1,5 +1,5 @@
 import React from 'react';
-import {Message, Text, Author, TextBox} from './style';
+import {Message, Text, Author, TextBox, Image} from './style';
 
 interface IChatMessageComponent {
   item: {message: string; author: string; authorImage: string};
@@ -12,10 +12,14 @@ const ChatMessageComponent: React.FC<IChatMessageComponent> = ({
 }) => {
   return (
     <Message isMyMessage={isMyMessage}>
+      {!isMyMessage ? <Image source={{uri: item.authorImage}} /> : null}
       <TextBox>
         <Author isMyMessage={isMyMessage}> {item.author} </Author>
         <Text>{item.message}</Text>
       </TextBox>
+      {isMyMessage ? (
+        <Image source={{uri: item.authorImage}} isMyMessage={isMyMessage} />
+      ) : null}
     </Message>
   );
 };
