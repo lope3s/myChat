@@ -1,6 +1,6 @@
 # myChat
 
-myChat is a full-stack app that i've created to test my evolution with the past months of professional experience.<hr/>
+myChat is a full-stack app that i've created to test my evolution with the past months of professional experience.\n
 In this project, my goal was to build a chat aplication with React-Native and a full GraphQL Server with webSockets to create the real time communication between server and client and to do this i've used the Apollo Server Express library.
 
 ## Mobile installation
