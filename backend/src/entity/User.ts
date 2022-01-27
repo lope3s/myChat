@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    OneToOne,
+    JoinColumn,
+} from "typeorm";
+import { ChatRoom } from "./ChatRoom";
 
 @Entity()
 export class User {
@@ -10,4 +17,10 @@ export class User {
 
     @Column()
     imageUrl: string;
+
+    @OneToOne(() => ChatRoom, (chatRoom) => chatRoom.user, {
+        onDelete: "SET NULL",
+    })
+    @JoinColumn()
+    chatRoom: ChatRoom;
 }

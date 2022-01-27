@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
     scalar Date
@@ -7,6 +7,17 @@ const typeDefs = gql`
         imageUrl: String
         username: String
         id: String
+    }
+
+    type ChatRoom {
+        roomName: String
+        id: String
+    }
+
+    type CompleteChatRoom {
+        roomName: String
+        id: String
+        user: User
     }
 
     type Info {
@@ -36,6 +47,20 @@ const typeDefs = gql`
         created: Date
     }
 
+    type Message {
+        id: String
+        roomId: String
+        author: String
+        authorImage: String
+        message: String
+    }
+
+    type FilteredMessage {
+        author: String
+        authorImage: String
+        message: String
+    }
+
     type PaginatedRMApiResult {
         info: Info
         results: [Results]
@@ -45,11 +70,26 @@ const typeDefs = gql`
         start: String
         getPaginatedCharactersData(page: Int!): PaginatedRMApiResult
         checkUserData(id: String!): User
+        getChatRooms: String
+        getAllChatMessages(roomId: String!): [Message]
     }
 
     type Mutation {
         registerUser(imageUrl: String!, username: String!): User
         updateUserImage(imageUrl: String!, username: String!): User
+        registerChatRoom(userId: String!, roomName: String!): ChatRoom
+        deleteChatRoom(roomId: String!): String
+        postMessage(
+            authorImage: String!
+            author: String!
+            roomId: String!
+            message: String!
+        ): Message
+    }
+
+    type Subscription {
+        allChatRooms: [CompleteChatRoom]
+        newMessage: FilteredMessage
     }
 `;
 

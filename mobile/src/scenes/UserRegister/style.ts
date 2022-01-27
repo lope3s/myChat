@@ -55,7 +55,7 @@ export const Loading = styled.View`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #00000060;
+  background-color: #e9c46a;
   justify-content: center;
   align-items: center;
 `;

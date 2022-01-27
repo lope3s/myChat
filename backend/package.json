@@ -3,11 +3,16 @@
         "dev": "ts-node-dev --respawn --transpile-only src/"
     },
     "dependencies": {
+        "@graphql-tools/schema": "^8.3.1",
         "apollo-datasource-rest": "^3.5.1",
-        "apollo-server": "^3.6.2",
+        "apollo-server-core": "^3.6.2",
+        "apollo-server-express": "^3.6.2",
+        "express": "^4.17.2",
         "graphql": "^16.2.0",
+        "graphql-subscriptions": "^2.0.0",
         "reflect-metadata": "^0.1.13",
         "sqlite3": "^5.0.2",
+        "subscriptions-transport-ws": "^0.11.0",
         "typeorm": "^0.2.41"
     },
     "name": "backend",

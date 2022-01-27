@@ -23,6 +23,7 @@ interface IGetUserData {
   checkUserData: {
     imageUrl: string;
     username: string;
+    id: string;
   };
 }
 
@@ -36,6 +37,7 @@ const UserRegister: React.FC<Props> = () => {
     username,
     setUsername,
     setNavigate,
+    setUserId,
   } = useRegister();
   const [register, {data, loading, error, reset}] = useMutation(REGISTER_USER);
   const [getUserData, checkUserData] =
@@ -44,11 +46,13 @@ const UserRegister: React.FC<Props> = () => {
   if (checkUserData?.data?.checkUserData) {
     setImageUrl(checkUserData.data.checkUserData?.imageUrl);
     setUsername(checkUserData.data.checkUserData?.username);
+    setUserId(checkUserData.data.checkUserData?.id);
     setNavigate(true);
   }
 
   if (data) {
     AsyncStorage.setItem('userId', JSON.stringify(data.registerUser.id));
+    setUserId(data.registerUser.id);
     reset();
     setNavigate(true);
   }
@@ -88,18 +92,16 @@ const UserRegister: React.FC<Props> = () => {
         }
       })
       .catch(err => {
-        console.log('erro: ', err);
         Alert.alert('Erro Interno');
       });
   }, [getUserData, checkUserData.called, checkUserData.refetch]);
 
-  return (
+  return loading || checkUserData.loading ? (
+    <Loading>
+      <ActivityIndicator size={100} color="#E76F51" />
+    </Loading>
+  ) : (
     <Container>
-      {loading || checkUserData.loading ? (
-        <Loading>
-          <ActivityIndicator size={100} color="#E76F51" />
-        </Loading>
-      ) : null}
       <Title>myChat</Title>
       <ImageSelector />
       <TextInput

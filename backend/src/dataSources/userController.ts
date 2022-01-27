@@ -1,7 +1,7 @@
 import { User } from "../entity/User";
 import { getConnection, getRepository } from "typeorm";
 import { DataSource } from "apollo-datasource";
-import { UserInputError } from "apollo-server";
+import { UserInputError } from "apollo-server-express";
 
 interface IUserObject {
     imageUrl: string;

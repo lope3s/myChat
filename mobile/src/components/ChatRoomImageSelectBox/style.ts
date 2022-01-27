@@ -8,7 +8,6 @@ export const Container = styled.Pressable`
   height: 100%;
   justify-content: center;
   align-items: center;
-  //background-color: #000;
   z-index: 1;
 `;
 

@@ -42,7 +42,7 @@ const ChatRoomImageSelectBox: React.FC = () => {
     updateImageResponse.reset();
   }
 
-  if (updateImageResponse.data.updateUserImage) {
+  if (updateImageResponse?.data?.updateUserImage) {
     updateImageResponse.reset();
   }
 
@@ -53,7 +53,6 @@ const ChatRoomImageSelectBox: React.FC = () => {
   return (
     <Container
       onPress={e => {
-        console.log();
         setChatRoomModal(false);
       }}>
       <Content
